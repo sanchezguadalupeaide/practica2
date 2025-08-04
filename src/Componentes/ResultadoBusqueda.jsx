@@ -1,35 +1,20 @@
 import { useEffect } from "react"
 
-export const Inicio = ({libros, setLibros}) => {
+export const ResultadoBusqueda = ({buscarLibros, libros, setLibros}) =>{
 
     const traerLibros = async () => {
-        let respuesta = await fetch("https://openlibrary.org/search.json?q=subject:fantasy&limit=50")
+        let respuesta = await fetch(`https://openlibrary.org/search.json?title=${buscarLibros}`)
         let datos = await respuesta.json()
-
-        const docs = datos.docs
-        const librosSeleccionados = []
-
-        while (librosSeleccionados.length < 6) {
-            const indiceAleatorio = Math.floor(Math.random() * docs.length)
-            const libro = docs[indiceAleatorio]
-
-            if (!librosSeleccionados.includes(libro)) {
-                librosSeleccionados.push(libro)
-            }
-        }
-
-        setLibros(librosSeleccionados)
+        setLibros(datos.docs)
     }
 
     useEffect(() => {
-        console.log("se ejecuto el useEffect")
-        traerLibros()
-    }, [])
-    if (libros.length === 0) {
-        return <p>Cargando libros...</p>
-    }
+        if (buscarLibros!=="") {
+            traerLibros()
+        }
+    }, [buscarLibros])
 
-    return <>
+    return<>
         <table border={2}>
             <thead>
                 <tr>
